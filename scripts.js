@@ -122,7 +122,15 @@ const DOM = {
 };
 
 const Utils = {
-  formatAmount(value) {},
+  formatAmount(value) {
+    value = Number(value) * 100;
+    return value;
+  },
+
+  formatDate(date) {
+    const splitDate = date.split("-");
+    return `${splitDate[2]}/${splitDate[1]}/${splitDate[0]}`;
+  },
 
   formatCurrency(value) {
     const signal = Number(value) < 0 ? "-" : "";
@@ -156,15 +164,33 @@ const Form = {
   validateFields() {
     const { description, amount, date } = Form.getValues();
 
-    if (description.trim() === "" || amount.trim() === "" || date.trim()) {
-      throw new Error("Por favor, preenhca todos os campos");
+    if (
+      description.trim() === "" ||
+      amount.trim() === "" ||
+      date.trim() === ""
+    ) {
+      throw new Error("Por favor, preencha todos os campos");
     }
-
-    console.log(description);
   },
 
   formatValues() {
     let { description, amount, date } = Form.getValues();
+
+    amount = Utils.formatAmount(amount);
+
+    date = Utils.formatDate(date);
+
+    return {
+      description,
+      amount,
+      date,
+    };
+  },
+
+  clearFields() {
+    Form.description.value = "";
+    Form.amount.value = "";
+    Form.date.value = "";
   },
 
   submit(event) {
@@ -174,11 +200,13 @@ const Form = {
       //Verificar se informaçoes foram preenchidas
       Form.validateFields();
       //Formatar os dados para salvar
-      Form.formatValues();
+      const transaction = Form.formatValues();
       //Salvar
+      Transaction.add(transaction);
       //Apagar os dados do formulario
+      Form.clearFields();
       //Modal Feche
-      //Atualizar a aplicação
+      Modal.close();
     } catch (error) {
       alert(error.message);
     }
