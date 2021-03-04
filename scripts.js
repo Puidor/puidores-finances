@@ -7,31 +7,29 @@ const Modal = {
   },
 };
 
-const transactions = [
-  {
-    description: "Luz",
-    amount: -50000,
-    date: "23/01/2021",
-  },
-  {
-    description: "Criação Website",
-    amount: 500000,
-    date: "23/01/2021",
-  },
-  {
-    description: "Internet",
-    amount: -20000,
-    date: "23/01/2021",
-  },
-  {
-    description: "App",
-    amount: 200000,
-    date: "23/01/2021",
-  },
-];
-
 const Transaction = {
-  all: transactions,
+  all: [
+    {
+      description: "Luz",
+      amount: -50000,
+      date: "23/01/2021",
+    },
+    {
+      description: "Criação Website",
+      amount: 500000,
+      date: "23/01/2021",
+    },
+    {
+      description: "Internet",
+      amount: -20000,
+      date: "23/01/2021",
+    },
+    {
+      description: "App",
+      amount: 200000,
+      date: "23/01/2021",
+    },
+  ],
 
   add(transaction) {
     Transaction.all.push(transaction);
@@ -124,6 +122,8 @@ const DOM = {
 };
 
 const Utils = {
+  formatAmount(value) {},
+
   formatCurrency(value) {
     const signal = Number(value) < 0 ? "-" : "";
 
@@ -137,6 +137,51 @@ const Utils = {
     });
 
     return signal + value;
+  },
+};
+
+const Form = {
+  description: document.querySelector("input#description"),
+  amount: document.querySelector("input#amount"),
+  date: document.querySelector("input#date"),
+
+  getValues() {
+    return {
+      description: Form.description.value,
+      amount: Form.amount.value,
+      date: Form.date.value,
+    };
+  },
+
+  validateFields() {
+    const { description, amount, date } = Form.getValues();
+
+    if (description.trim() === "" || amount.trim() === "" || date.trim()) {
+      throw new Error("Por favor, preenhca todos os campos");
+    }
+
+    console.log(description);
+  },
+
+  formatValues() {
+    let { description, amount, date } = Form.getValues();
+  },
+
+  submit(event) {
+    event.preventDefault();
+
+    try {
+      //Verificar se informaçoes foram preenchidas
+      Form.validateFields();
+      //Formatar os dados para salvar
+      Form.formatValues();
+      //Salvar
+      //Apagar os dados do formulario
+      //Modal Feche
+      //Atualizar a aplicação
+    } catch (error) {
+      alert(error.message);
+    }
   },
 };
 
@@ -155,5 +200,3 @@ const App = {
 };
 
 App.init();
-
-Transaction.remove(1);
